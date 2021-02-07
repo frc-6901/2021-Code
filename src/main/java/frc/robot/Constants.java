@@ -14,7 +14,7 @@ package frc.robot;
  */
 public final class Constants {
     public static final class IntakeConstants {
-        public static int kIntakePower = 5;
+        public static double kIntakePower = 0.5;
         public static final int VictorSPXPort = 2;
     }
     public static final int XboxControllerPort = 0;
