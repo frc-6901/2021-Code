@@ -19,6 +19,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private VictorSPX mMotor = new VictorSPX(Constants.IntakeConstants.VictorSPXPort);
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -66,7 +68,13 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() { // is this the correct method to put this code in
+    if (leftBumper.isPressed) { // need to identify the left bumper event....
+      mMotor.setSpeed(Constants.IntakeConstants.kIntakePower);
+    } else if (rightBumper.isPressed) {
+      mMotor.setSpeed(-1 * Constants.IntakeConstants.kIntakePower);
+    }
+  }
 
   @Override
   public void teleopInit() {
