@@ -7,8 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -89,11 +90,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if (m_XboxController.getBumperPressed(GenericHID.Hand.kLeft)) {
-      mIntakeMotor.set(ControlMode.Velocity, Constants.IntakeConstants.kIntakePower);
+      mIntakeMotor.set(ControlMode.PercentOutput, Constants.IntakeConstants.kIntakePower);
     } else if (m_XboxController.getBumperPressed(GenericHID.Hand.kRight)) {
-      mIntakeMotor.set(ControlMode.Velocity, -1 * Constants.IntakeConstants.kIntakePower);
+      mIntakeMotor.set(ControlMode.PercentOutput, -1 * Constants.IntakeConstants.kIntakePower);
     } else {
-      mIntakeMotor.set(ControlMode.Velocity, 0);
+      mIntakeMotor.set(ControlMode.PercentOutput, 0);
     }
   }
 
