@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
     if (m_XboxController.getBumperPressed(GenericHID.Hand.kLeft)) {
       mIntakeMotor.set(ControlMode.PercentOutput, Constants.IntakeConstants.kIntakePower);
     } else if (m_XboxController.getBumperPressed(GenericHID.Hand.kRight)) {
-      mIntakeMotor.set(ControlMode.PercentOutput, -1 * Constants.IntakeConstants.kIntakePower);
+      mIntakeMotor.set(ControlMode.PercentOutput, -Constants.IntakeConstants.kIntakePower);
     } else {
       mIntakeMotor.set(ControlMode.PercentOutput, 0);
     }
