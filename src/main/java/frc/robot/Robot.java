@@ -5,11 +5,14 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.IntakeConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,6 +29,12 @@ public class Robot extends TimedRobot {
 
   private XboxController m_XboxController = new XboxController(Constants.XboxControllerPort);
 
+  private Compressor mCompressor;
+
+  private DoubleSolenoid mSolenoidOne;
+
+  private DoubleSolenoid mSolenoidTwo;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -35,6 +44,17 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    mCompressor = new Compressor();
+    mCompressor.setClosedLoopControl(true);
+
+    mSolenoidOne =
+        new DoubleSolenoid(IntakeConstants.kForwardChannelOne, IntakeConstants.kReverseChannelOne);
+    mSolenoidTwo =
+        new DoubleSolenoid(IntakeConstants.kForwardChannelTwo, IntakeConstants.kReverseChannelTwo);
+
+    mSolenoidOne.set(DoubleSolenoid.Value.kOff);
+    mSolenoidTwo.set(DoubleSolenoid.Value.kOff);
   }
 
   /**
@@ -55,7 +75,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    mSolenoidOne.set(DoubleSolenoid.Value.kOff);
+    mSolenoidTwo.set(DoubleSolenoid.Value.kOff);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -85,16 +108,25 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
   }
-
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if (m_XboxController.getBumper(GenericHID.Hand.kLeft)) {
+    if (m_XboxController.getBumperPressed(GenericHID.Hand.kLeft)) {
       mIntakeMotor.set(ControlMode.PercentOutput, Constants.IntakeConstants.kIntakePower);
-    } else if (m_XboxController.getBumper(GenericHID.Hand.kRight)) {
+    } else if (m_XboxController.getBumperPressed(GenericHID.Hand.kRight)) {
       mIntakeMotor.set(ControlMode.PercentOutput, -Constants.IntakeConstants.kIntakePower);
     } else {
       mIntakeMotor.set(ControlMode.PercentOutput, 0);
+    }
+    if (m_XboxController.getAButton()) {
+      mSolenoidOne.set(DoubleSolenoid.Value.kForward);
+      mSolenoidTwo.set(DoubleSolenoid.Value.kForward);
+    } else if (m_XboxController.getBButton()) {
+      mSolenoidOne.set(DoubleSolenoid.Value.kReverse);
+      mSolenoidTwo.set(DoubleSolenoid.Value.kReverse);
+    } else {
+      mSolenoidOne.set(DoubleSolenoid.Value.kOff);
+      mSolenoidTwo.set(DoubleSolenoid.Value.kOff);
     }
   }
 
